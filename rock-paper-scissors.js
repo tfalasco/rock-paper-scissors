@@ -15,6 +15,17 @@ function getComputerChoice() {
     }
 }
 
-for (let i = 0; i < 10; i++) {
-    console.log(getComputerChoice());
+function getUserChoice() {
+    let userChoice = prompt("Please type 'rock', 'paper', 'scissors', or 'exit'.");
+
+    userChoice = userChoice.toLowerCase();
+
+    if (("rock" != userChoice) &&
+        ("paper" != userChoice) &&
+        ("scisors" != userChoice) &&
+        ("exit" != userChoice)) {
+            userChoice = "exit";
+    }
+
+    return userChoice;
 }
