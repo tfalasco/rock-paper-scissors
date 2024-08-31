@@ -26,7 +26,7 @@ function getUserChoice() {
 
     if (("rock" != userChoice) &&
         ("paper" != userChoice) &&
-        ("scisors" != userChoice) &&
+        ("scissors" != userChoice) &&
         ("exit" != userChoice)) {
             userChoice = "exit";
     }
