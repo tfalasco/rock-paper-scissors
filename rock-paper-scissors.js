@@ -105,7 +105,7 @@ function playGame() {
     if (UserScore > ComputerScore) {
         console.log("You did it!!! Your superior skill carried the day!")
     }
-    else if (ComputerScore > ComputerScore) {
+    else if (ComputerScore > UserScore) {
         console.log("You lost. Loser.");
     }
     else {
