@@ -33,7 +33,9 @@ function getUserChoice() {
         userChoice = prompt("Please type 'rock', 'paper', or 'scissors'.");
 
         // Set to lower case to simplify future comparisons
-        userChoice = userChoice.toLowerCase();
+        if (userChoice !== null) {
+            userChoice = userChoice.toLowerCase();
+        }
     }
 
     return userChoice;
