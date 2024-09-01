@@ -109,7 +109,7 @@ function playGame() {
         console.log("You lost. Loser.");
     }
     else {
-        console.log("It's a tie. Try harder next time.")
+        console.log("Tie game. Be luckier next time.")
     }
     
     // Print the score.
