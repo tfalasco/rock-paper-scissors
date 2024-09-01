@@ -3,8 +3,10 @@
 * Functions
 ******************************************************************************/
 function getComputerChoice() {
+    // Get a random number between 0 and 2
     let computerChoice = Math.floor(Math.random() * 3);
     
+    // Translate the random number to a string of 'rock', 'paper', or 'scissors'
     if (0 === computerChoice) {
         return "rock";
     }
@@ -20,25 +22,33 @@ function getComputerChoice() {
 }
 
 function getUserChoice() {
-    let userChoice = prompt("Please type 'rock', 'paper', 'scissors', or 'exit'.");
-
-    userChoice = userChoice.toLowerCase();
-
-    if (("rock" != userChoice) &&
+    let userChoice;
+    
+    // Loop until we get a valid choice
+    while (("rock" != userChoice) &&
         ("paper" != userChoice) &&
-        ("scissors" != userChoice) &&
-        ("exit" != userChoice)) {
-            userChoice = "exit";
+        ("scissors" != userChoice)) {
+
+        // Prompt the user for their choice
+        userChoice = prompt("Please type 'rock', 'paper', or 'scissors'.");
+
+        // Set to lower case to simplify future comparisons
+        userChoice = userChoice.toLowerCase();
     }
 
     return userChoice;
 }
 
 function decideWinner(userChoice, computerChoice) {
+    // Check for a tie
     if (userChoice == computerChoice) {
         return "It's a tie!";
     }
 
+    // If not a tie, check which player won
+    //     Paper beats rock
+    //     Scissors beat paper
+    //     Rock beats scissors
     switch (userChoice) {
         case "rock":
             return ("paper" == computerChoice) ? "You lose!" : "You win!";
@@ -52,12 +62,35 @@ function decideWinner(userChoice, computerChoice) {
 }
 
 function playRound() {
+    let winner;
+    let loser;
+
+    // Get the contestant's choices
+    // Rock, paper, scissors, shoot!!!
     let computerChoice = getComputerChoice();
     let userChoice = getUserChoice();
 
+    // Decide who won this round
     let result = decideWinner(userChoice, computerChoice);
 
-    console.log(result);
+    // Prepare variables for output
+    // The winner's choice will be the first word of a sentence, so capitalize the first letter.
+    if ("You win!" == result) {
+        winner = userChoice.charAt(0).toUpperCase() + userChoice.slice(1);
+        loser = computerChoice;
+    }
+    else if ("You lose!" == result) {
+        winner = computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
+        loser = userChoice;
+    }
+
+    // Print the result
+    console.log(`${result}`);
+    if ("It's a tie!" != result) {
+        console.log(`${winner} beats ${loser}.`);
+    }
+    
+    // For degug.  Remove these two lines.
     console.log(`user: ${userChoice}`);
     console.log(`computer: ${computerChoice}`);
 }
