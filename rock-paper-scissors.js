@@ -78,10 +78,12 @@ function playRound() {
     if ("You win!" == result) {
         winner = userChoice.charAt(0).toUpperCase() + userChoice.slice(1);
         loser = computerChoice;
+        UserScore++;
     }
     else if ("You lose!" == result) {
         winner = computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
         loser = userChoice;
+        ComputerScore++;
     }
 
     // Print the result
@@ -89,10 +91,28 @@ function playRound() {
     if ("It's a tie!" != result) {
         console.log(`${winner} beats ${loser}.`);
     }
+}
+
+function playGame() {
+    // Play five rounds
+    for (let round = 0; round < 5; round++) {
+        playRound();
+    }
+
+    // Print the final result
+    if (UserScore > ComputerScore) {
+        console.log("You did it!!! Your superior skill carried the day!")
+    }
+    else if (ComputerScore > ComputerScore) {
+        console.log("You lost. Loser.");
+    }
+    else {
+        console.log("It's a tie. Try harder next time.")
+    }
     
-    // For degug.  Remove these two lines.
-    console.log(`user: ${userChoice}`);
-    console.log(`computer: ${computerChoice}`);
+    // Print the score.
+    console.log(`Your score: ${UserScore}`);
+    console.log(`Their score: ${ComputerScore}`);
 }
 /*****************************************************************************/
 
@@ -106,5 +126,5 @@ let ComputerScore = 0;
 /******************************************************************************
 * Main Script
 ******************************************************************************/
-playRound();
+playGame();
 /*****************************************************************************/
