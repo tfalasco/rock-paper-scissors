@@ -21,9 +21,9 @@ function getComputerChoice() {
     }
 }
 
-function decideWinner(userChoice, computerChoice) {
+function decideWinner(playerChoice, computerChoice) {
     // Check for a tie
-    if (userChoice == computerChoice) {
+    if (playerChoice == computerChoice) {
         return "It's a tie!";
     }
 
@@ -31,7 +31,7 @@ function decideWinner(userChoice, computerChoice) {
     //     Paper beats rock
     //     Scissors beat paper
     //     Rock beats scissors
-    switch (userChoice) {
+    switch (playerChoice) {
         case "rock":
             return ("paper" == computerChoice) ? "You lose!" : "You win!";
         case "paper":
@@ -43,7 +43,7 @@ function decideWinner(userChoice, computerChoice) {
     }
 }
 
-function playRound(userChoice) {
+function playRound(playerChoice) {
     let winner;
     let loser;
     let returnString = "";
@@ -53,18 +53,18 @@ function playRound(userChoice) {
     let computerChoice = getComputerChoice();
 
     // Decide who won this round
-    let result = decideWinner(userChoice, computerChoice);
+    let result = decideWinner(playerChoice, computerChoice);
 
     // Prepare variables for output
     // The winner's choice will be the first word of a sentence, so capitalize the first letter.
     if ("You win!" == result) {
-        winner = userChoice.charAt(0).toUpperCase() + userChoice.slice(1);
+        winner = playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1);
         loser = computerChoice;
-        UserScore++;
+        PlayerScore++;
     }
     else if ("You lose!" == result) {
         winner = computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
-        loser = userChoice;
+        loser = playerChoice;
         ComputerScore++;
     }
 
@@ -80,7 +80,7 @@ function playRound(userChoice) {
 
 function showScore() {
     const playerScore = document.querySelector("#playerScore");
-    playerScore.textContent = UserScore;
+    playerScore.textContent = PlayerScore;
     const computerScore = document.querySelector("#computerScore");
     computerScore.textContent = ComputerScore;
     
@@ -90,7 +90,7 @@ function showScore() {
     if (undefined !== winner) {
         // There was a winner.  Print the results
         const finalResult = document.createElement("p");
-        if ("user" === winner) {
+        if ("player" === winner) {
             finalResult.textContent = "You did it!!! Your superior skill carried the day!";
         }
         else if ("computer" === winner) {
@@ -111,7 +111,7 @@ function showScore() {
         resetBtn.classList.add("resetBtn");
         resetBtn.addEventListener("click", () => {
             // Reset scores
-            UserScore = 0;
+            PlayerScore = 0;
             ComputerScore = 0;
 
             // Reenable game buttons
@@ -135,8 +135,8 @@ function showScore() {
 }
 
 function checkForWin() {
-    if (UserScore >= 5) {
-        return "user";
+    if (PlayerScore >= 5) {
+        return "player";
     }
     else if (ComputerScore >= 5) {
         return "computer";
@@ -150,7 +150,7 @@ function checkForWin() {
 /******************************************************************************
 * Global Variables
 ******************************************************************************/
-let UserScore = 0;
+let PlayerScore = 0;
 let ComputerScore = 0;
 /*****************************************************************************/
 
@@ -180,7 +180,7 @@ btnArray.addEventListener("click", function(e) {
             break;
     }
 
-    // Update the score if the user clicked one of the buttons
+    // Update the score if the player clicked one of the buttons
     if ("btnArray" != e.target.id) {
         showScore();
     }
