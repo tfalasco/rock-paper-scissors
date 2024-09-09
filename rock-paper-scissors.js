@@ -46,6 +46,7 @@ function decideWinner(userChoice, computerChoice) {
 function playRound(userChoice) {
     let winner;
     let loser;
+    let returnString = "";
 
     // Get the contestant's choices
     // Rock, paper, scissors, shoot!!!
@@ -67,17 +68,23 @@ function playRound(userChoice) {
         ComputerScore++;
     }
 
-    // Print the result
-    console.log(`${result}`);
+    // Create the result string
+    returnString = result;
     if ("It's a tie!" != result) {
-        console.log(`${winner} beats ${loser}.`);
+        returnString += ` ${winner} beats ${loser}.`;
     }
+    console.log(returnString);
+
+    return returnString;
 }
 
 function showScore() {
+    const playerScore = document.querySelector("#playerScore");
+    playerScore.textContent = UserScore;
+    const computerScore = document.querySelector("#computerScore");
+    computerScore.textContent = ComputerScore;
+    
     const results = document.querySelector("#results");
-    const resultString = `You: ${UserScore}\tComputer: ${ComputerScore}`;
-    results.textContent = resultString;
 
     const winner = checkForWin();
     if (undefined !== winner) {
@@ -100,6 +107,8 @@ function showScore() {
         // Add a reset button
         const resetBtn = document.createElement("button");
         resetBtn.textContent = "Reset";
+        resetBtn.classList.add("gameBtn");
+        resetBtn.classList.add("resetBtn");
         resetBtn.addEventListener("click", () => {
             // Reset scores
             UserScore = 0;
@@ -113,6 +122,10 @@ function showScore() {
             // Remove the result string and this button now that the game is reset
             results.removeChild(finalResult);
             results.removeChild(resetBtn);
+
+            // Clear the last round output
+            const roundOutput = document.querySelector("#roundOutput");
+            roundOutput.textContent = "...";
 
             // Reprint the score now that it has changed
             showScore();
@@ -150,15 +163,16 @@ let ComputerScore = 0;
 const btnArray = document.querySelector("#btnArray");
 // When the button array gets a click event, which target was clicked
 btnArray.addEventListener("click", function(e) {
+    const roundOutput = document.querySelector("#roundOutput");
     switch (e.target.id) {
         case "rockBtn":
-            playRound("rock");
+            roundOutput.textContent = playRound("rock");
             break;
         case "paperBtn":
-            playRound("paper");
+            roundOutput.textContent = playRound("paper");
             break;
         case "scissorsBtn":
-            playRound("scissors");
+            roundOutput.textContent = playRound("scissors");
             break;
         default:
             console.log("Unhandled click event.");
@@ -166,8 +180,10 @@ btnArray.addEventListener("click", function(e) {
             break;
     }
 
-    // Update the score
-    showScore();
+    // Update the score if the user clicked one of the buttons
+    if ("btnArray" != e.target.id) {
+        showScore();
+    }
 });
 
 // Show the initial score

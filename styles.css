@@ -1,0 +1,59 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: #EAE4DD;
+    color:#295F98;
+}
+
+#gameBoard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gameBtn {
+    font-size: xx-large;
+    margin: 5px;
+    height: 100px;
+    width: 100px;
+    border-radius: 10%;
+    background-color: #E1D7C6;
+    border-color: #295F98;
+    border-width: 5px;
+}
+
+.resetBtn {
+    font-size: x-large;
+    color:#295F98;
+}
+
+#btnArray {
+    margin: 20px;
+}
+
+#roundOutput {
+    padding: 10px;
+}
+
+#results {
+    font-size: large;
+    text-align: center;
+}
+
+#scoreBoard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 250px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: large;
+    width: 80px;
+}
+
+.score {
+    font-size: x-large;
+}
