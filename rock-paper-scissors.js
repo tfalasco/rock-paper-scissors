@@ -21,29 +21,9 @@ function getComputerChoice() {
     }
 }
 
-function getUserChoice() {
-    let userChoice;
-    
-    // Loop until we get a valid choice
-    while (("rock" != userChoice) &&
-        ("paper" != userChoice) &&
-        ("scissors" != userChoice)) {
-
-        // Prompt the user for their choice
-        userChoice = prompt("Please type 'rock', 'paper', or 'scissors'.");
-
-        // Set to lower case to simplify future comparisons
-        if (userChoice !== null) {
-            userChoice = userChoice.toLowerCase();
-        }
-    }
-
-    return userChoice;
-}
-
-function decideWinner(userChoice, computerChoice) {
+function decideWinner(playerChoice, computerChoice) {
     // Check for a tie
-    if (userChoice == computerChoice) {
+    if (playerChoice == computerChoice) {
         return "It's a tie!";
     }
 
@@ -51,7 +31,7 @@ function decideWinner(userChoice, computerChoice) {
     //     Paper beats rock
     //     Scissors beat paper
     //     Rock beats scissors
-    switch (userChoice) {
+    switch (playerChoice) {
         case "rock":
             return ("paper" == computerChoice) ? "You lose!" : "You win!";
         case "paper":
@@ -63,70 +43,149 @@ function decideWinner(userChoice, computerChoice) {
     }
 }
 
-function playRound() {
+function playRound(playerChoice) {
     let winner;
     let loser;
+    let returnString = "";
 
     // Get the contestant's choices
     // Rock, paper, scissors, shoot!!!
     let computerChoice = getComputerChoice();
-    let userChoice = getUserChoice();
 
     // Decide who won this round
-    let result = decideWinner(userChoice, computerChoice);
+    let result = decideWinner(playerChoice, computerChoice);
 
     // Prepare variables for output
     // The winner's choice will be the first word of a sentence, so capitalize the first letter.
     if ("You win!" == result) {
-        winner = userChoice.charAt(0).toUpperCase() + userChoice.slice(1);
+        winner = playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1);
         loser = computerChoice;
-        UserScore++;
+        PlayerScore++;
     }
     else if ("You lose!" == result) {
         winner = computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
-        loser = userChoice;
+        loser = playerChoice;
         ComputerScore++;
     }
 
-    // Print the result
-    console.log(`${result}`);
+    // Create the result string
+    returnString = result;
     if ("It's a tie!" != result) {
-        console.log(`${winner} beats ${loser}.`);
+        returnString += ` ${winner} beats ${loser}.`;
+    }
+    console.log(returnString);
+
+    return returnString;
+}
+
+function showScore() {
+    const playerScore = document.querySelector("#playerScore");
+    playerScore.textContent = PlayerScore;
+    const computerScore = document.querySelector("#computerScore");
+    computerScore.textContent = ComputerScore;
+    
+    const results = document.querySelector("#results");
+
+    const winner = checkForWin();
+    if (undefined !== winner) {
+        // There was a winner.  Print the results
+        const finalResult = document.createElement("p");
+        if ("player" === winner) {
+            finalResult.textContent = "You did it!!! Your superior skill carried the day!";
+        }
+        else if ("computer" === winner) {
+            finalResult.textContent = "You lost. Loser.";
+        }
+        results.appendChild(finalResult);
+
+        // Disable game buttons
+        const buttons = btnArray.querySelectorAll("button");
+        for (btn of buttons) {
+            btn.disabled = true;
+        }
+
+        // Add a reset button
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Reset";
+        resetBtn.classList.add("gameBtn");
+        resetBtn.classList.add("resetBtn");
+        resetBtn.addEventListener("click", () => {
+            // Reset scores
+            PlayerScore = 0;
+            ComputerScore = 0;
+
+            // Reenable game buttons
+            for (btn of buttons) {
+                btn.disabled = false;
+            }
+
+            // Remove the result string and this button now that the game is reset
+            results.removeChild(finalResult);
+            results.removeChild(resetBtn);
+
+            // Clear the last round output
+            const roundOutput = document.querySelector("#roundOutput");
+            roundOutput.textContent = "...";
+
+            // Reprint the score now that it has changed
+            showScore();
+        });
+        results.appendChild(resetBtn);
     }
 }
 
-function playGame() {
-    // Play five rounds
-    for (let round = 0; round < 5; round++) {
-        playRound();
+function checkForWin() {
+    if (PlayerScore >= 5) {
+        return "player";
     }
-
-    // Print the final result
-    if (UserScore > ComputerScore) {
-        console.log("You did it!!! Your superior skill carried the day!")
-    }
-    else if (ComputerScore > UserScore) {
-        console.log("You lost. Loser.");
+    else if (ComputerScore >= 5) {
+        return "computer";
     }
     else {
-        console.log("Tie game. Be luckier next time.")
+        return undefined;
     }
-    
-    // Print the score.
-    console.log(`Your score: ${UserScore}`);
-    console.log(`Their score: ${ComputerScore}`);
 }
 /*****************************************************************************/
 
 /******************************************************************************
 * Global Variables
 ******************************************************************************/
-let UserScore = 0;
+let PlayerScore = 0;
 let ComputerScore = 0;
 /*****************************************************************************/
 
 /******************************************************************************
 * Main Script
 ******************************************************************************/
-playGame();
+// Assign event listeners to the rock, paper, and scissors buttons
+// Here we are taking advantage of event bubbling to reduce the number of
+// event listeners, which allegedly improves performance.
+const btnArray = document.querySelector("#btnArray");
+// When the button array gets a click event, which target was clicked
+btnArray.addEventListener("click", function(e) {
+    const roundOutput = document.querySelector("#roundOutput");
+    switch (e.target.id) {
+        case "rockBtn":
+            roundOutput.textContent = playRound("rock");
+            break;
+        case "paperBtn":
+            roundOutput.textContent = playRound("paper");
+            break;
+        case "scissorsBtn":
+            roundOutput.textContent = playRound("scissors");
+            break;
+        default:
+            console.log("Unhandled click event.");
+            console.log(e);
+            break;
+    }
+
+    // Update the score if the player clicked one of the buttons
+    if ("btnArray" != e.target.id) {
+        showScore();
+    }
+});
+
+// Show the initial score
+showScore();
 /*****************************************************************************/
