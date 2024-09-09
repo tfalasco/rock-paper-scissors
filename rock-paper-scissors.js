@@ -21,26 +21,6 @@ function getComputerChoice() {
     }
 }
 
-function getUserChoice() {
-    let userChoice;
-    
-    // Loop until we get a valid choice
-    while (("rock" != userChoice) &&
-        ("paper" != userChoice) &&
-        ("scissors" != userChoice)) {
-
-        // Prompt the user for their choice
-        userChoice = prompt("Please type 'rock', 'paper', or 'scissors'.");
-
-        // Set to lower case to simplify future comparisons
-        if (userChoice !== null) {
-            userChoice = userChoice.toLowerCase();
-        }
-    }
-
-    return userChoice;
-}
-
 function decideWinner(userChoice, computerChoice) {
     // Check for a tie
     if (userChoice == computerChoice) {
@@ -63,14 +43,13 @@ function decideWinner(userChoice, computerChoice) {
     }
 }
 
-function playRound() {
+function playRound(userChoice) {
     let winner;
     let loser;
 
     // Get the contestant's choices
     // Rock, paper, scissors, shoot!!!
     let computerChoice = getComputerChoice();
-    let userChoice = getUserChoice();
 
     // Decide who won this round
     let result = decideWinner(userChoice, computerChoice);
@@ -95,26 +74,63 @@ function playRound() {
     }
 }
 
-function playGame() {
-    // Play five rounds
-    for (let round = 0; round < 5; round++) {
-        playRound();
-    }
+function showScore() {
+    const results = document.querySelector("#results");
+    const resultString = `You: ${UserScore}\tComputer: ${ComputerScore}`;
+    results.textContent = resultString;
 
-    // Print the final result
-    if (UserScore > ComputerScore) {
-        console.log("You did it!!! Your superior skill carried the day!")
+    const winner = checkForWin();
+    if (undefined !== winner) {
+        // There was a winner.  Print the results
+        const finalResult = document.createElement("p");
+        if ("user" === winner) {
+            finalResult.textContent = "You did it!!! Your superior skill carried the day!";
+        }
+        else if ("computer" === winner) {
+            finalResult.textContent = "You lost. Loser.";
+        }
+        results.appendChild(finalResult);
+
+        // Disable game buttons
+        const buttons = btnArray.querySelectorAll("button");
+        for (btn of buttons) {
+            btn.disabled = true;
+        }
+
+        // Add a reset button
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Reset";
+        resetBtn.addEventListener("click", () => {
+            // Reset scores
+            UserScore = 0;
+            ComputerScore = 0;
+
+            // Reenable game buttons
+            for (btn of buttons) {
+                btn.disabled = false;
+            }
+
+            // Remove the result string and this button now that the game is reset
+            results.removeChild(finalResult);
+            results.removeChild(resetBtn);
+
+            // Reprint the score now that it has changed
+            showScore();
+        });
+        results.appendChild(resetBtn);
     }
-    else if (ComputerScore > UserScore) {
-        console.log("You lost. Loser.");
+}
+
+function checkForWin() {
+    if (UserScore >= 5) {
+        return "user";
+    }
+    else if (ComputerScore >= 5) {
+        return "computer";
     }
     else {
-        console.log("Tie game. Be luckier next time.")
+        return undefined;
     }
-    
-    // Print the score.
-    console.log(`Your score: ${UserScore}`);
-    console.log(`Their score: ${ComputerScore}`);
 }
 /*****************************************************************************/
 
@@ -128,5 +144,32 @@ let ComputerScore = 0;
 /******************************************************************************
 * Main Script
 ******************************************************************************/
-playGame();
+// Assign event listeners to the rock, paper, and scissors buttons
+// Here we are taking advantage of event bubbling to reduce the number of
+// event listeners, which allegedly improves performance.
+const btnArray = document.querySelector("#btnArray");
+// When the button array gets a click event, which target was clicked
+btnArray.addEventListener("click", function(e) {
+    switch (e.target.id) {
+        case "rockBtn":
+            playRound("rock");
+            break;
+        case "paperBtn":
+            playRound("paper");
+            break;
+        case "scissorsBtn":
+            playRound("scissors");
+            break;
+        default:
+            console.log("Unhandled click event.");
+            console.log(e);
+            break;
+    }
+
+    // Update the score
+    showScore();
+});
+
+// Show the initial score
+showScore();
 /*****************************************************************************/
